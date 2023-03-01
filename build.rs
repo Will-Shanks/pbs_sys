@@ -6,20 +6,19 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
+    // Tell cargo to tell rustc to link the system pbs
+    println!("cargo:rustc-link-lib=pbs");
+    #[cfg(feature="static")]
+    println!("cargo:rustc-link-search=static=pbs");
+
+    let pbs_path = env::var("PBS_PATH").unwrap_or("/opt/pbs".to_string());
+    println!("cargo-rustc-link-search=native={pbs_path}/lib");
+
     // add libclang to link path only needed to generate bindings
     #[cfg(feature="bindgen")]
     let libclang_path = env::var("LIBCLANG_PATH").unwrap();
     #[cfg(feature="bindgen")]
     println!("cargo-rustc-link-search={}",libclang_path);
-
-    let pbs_path = env::var("PBS_PATH").unwrap_or("/opt/pbs".to_string());
-    println!("cargo-rustc-link-search=native={pbs_path}/lib");
-
-    // Tell cargo to tell rustc to link the system pbs
-    #[cfg(not(feature="static"))]
-    println!("cargo:rustc-link-lib=pbs");
-    #[cfg(feature="static")]
-    println!("cargo:rustc-link-search=static=pbs");
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=wrapper.h");

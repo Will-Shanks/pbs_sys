@@ -9,6 +9,7 @@ keywords = ["pbs", "hpc", "FFI"]
 
 [dependencies]
 bindgen = { version = "0.63", optional = true }
+linked_list_c = { path = "../linked_list_c-rs" }
 
 [build-dependencies]
 bindgen = { version = "0.63", optional = true }
