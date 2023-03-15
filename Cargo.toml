@@ -3,7 +3,7 @@ name = "pbs-sys"
 version = "0.0.2"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Will-Shanks/pbs_sys-rs"
+repository = "https://github.com/Will-Shanks/pbs_sys"
 description = "rust bindings for PBSPro HPC job scheduler"
 keywords = ["pbs", "hpc", "FFI"]
 
