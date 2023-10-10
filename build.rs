@@ -1,24 +1,24 @@
-#[cfg(feature="bindgen")]
+#[cfg(feature = "bindgen")]
 extern crate bindgen;
 
 use std::env;
-#[cfg(feature="bindgen")]
+#[cfg(feature = "bindgen")]
 use std::path::PathBuf;
 
 fn main() {
     // Tell cargo to tell rustc to link the system pbs
     println!("cargo:rustc-link-lib=pbs");
-    #[cfg(feature="static")]
+    #[cfg(feature = "static")]
     println!("cargo:rustc-link-search=static=pbs");
 
     let pbs_path = env::var("PBS_PATH").unwrap_or("/opt/pbs".to_string());
     println!("cargo-rustc-link-search=native={pbs_path}/lib");
 
     // add libclang to link path only needed to generate bindings
-    #[cfg(feature="bindgen")]
+    #[cfg(feature = "bindgen")]
     let libclang_path = env::var("LIBCLANG_PATH").unwrap();
-    #[cfg(feature="bindgen")]
-    println!("cargo-rustc-link-search={}",libclang_path);
+    #[cfg(feature = "bindgen")]
+    println!("cargo-rustc-link-search={}", libclang_path);
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
     println!("cargo:rerun-if-changed=wrapper.h");
@@ -26,14 +26,14 @@ fn main() {
     // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
     // the resulting bindings.
-    #[cfg(feature="bindgen")]
+    #[cfg(feature = "bindgen")]
     let bindings = bindgen::Builder::default()
         .rustfmt_bindings(true)
         .generate_comments(true)
         // The input header we would like to generate
         // bindings for.
         .header("wrapper.h")
-        .clang_arg(format!("-I{}/include",pbs_path))
+        .clang_arg(format!("-I{}/include", pbs_path))
         .clang_arg(format!("-I{}/clang/16.0.0/include", libclang_path))
         .clang_arg("-fparse-all-comments")
         .clang_arg("-fretain-comments-from-system-headers")
@@ -47,9 +47,9 @@ fn main() {
         .expect("Unable to generate bindings");
 
     // Write the bindings to the $OUT_DIR/bindings.rs file.
-    #[cfg(feature="bindgen")]
+    #[cfg(feature = "bindgen")]
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-    #[cfg(feature="bindgen")]
+    #[cfg(feature = "bindgen")]
     bindings
         .write_to_file(out_path.join("pbsffi.rs"))
         .expect("Couldn't write bindings!");
